@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { CylinderWheel, type Reward } from "@/components/CylinderWheel";
 import { FloatingParticles } from "@/components/FloatingParticles";
 
+
 const yourSpinRewards: Reward[] = [
   { id: 1, name: "$0.50", image: "/rewards/cash.png", chance: 20 },
   { id: 2, name: "$1.00", image: "/rewards/cash.png", chance: 18 },
@@ -65,8 +66,7 @@ export default function V2Page() {
           className="mb-4 relative rounded-2xl"
           style={{
             background: "linear-gradient(180deg, #111 0%, #0a0a0a 40%, #050505 100%)",
-            border: "1.5px solid #22c55e",
-            boxShadow: "0 0 8px rgba(34,197,94,0.4), 0 0 20px rgba(34,197,94,0.2), inset 0 0 8px rgba(34,197,94,0.1), 0 0 40px 3px rgba(0,0,0,0.6)",
+            boxShadow: "0 0 40px 3px rgba(0,0,0,0.6)",
             padding: "26px",
           }}
         >
@@ -85,9 +85,9 @@ export default function V2Page() {
                 width: 18,
                 height: 18,
                 borderRadius: "50%",
-                background: "radial-gradient(circle at 38% 32%, #ddd 0%, #aaa 30%, #666 60%, #333 100%)",
+                background: "radial-gradient(circle at 38% 32%, #444 0%, #333 30%, #222 60%, #111 100%)",
                 boxShadow:
-                  "inset 0 1px 2px rgba(255,255,255,0.6), inset 0 -1px 2px rgba(0,0,0,0.6), 0 2px 4px rgba(0,0,0,0.5)",
+                  "inset 0 1px 2px rgba(255,255,255,0.15), inset 0 -1px 2px rgba(0,0,0,0.6), 0 2px 4px rgba(0,0,0,0.5)",
               }}
             >
               <div
