@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { CylinderWheel, type Reward } from "@/components/CylinderWheel";
 import { FloatingParticles } from "@/components/FloatingParticles";
+import confetti from "canvas-confetti";
 
 
 const yourSpinRewards: Reward[] = [
@@ -35,6 +36,22 @@ export default function V2Page() {
   const showCongratsOverlay = showCongrats && (!isMysteryBox || mysteryPhase === "reveal");
   const showWheel = !showCongrats;
 
+  // Confetti explosion on win
+  useEffect(() => {
+    if (!showCongratsOverlay) return;
+    const colors = isMysteryBox
+      ? ["#7C3AED", "#C084FC", "#A855F7", "#E9D5FF"]
+      : ["#BC9D44", "#FFF3B6", "#D4C476", "#00C853", "#ffffff"];
+    // Initial big burst
+    confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 }, colors });
+    // Delayed side bursts
+    const t1 = setTimeout(() => {
+      confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0, y: 0.6 }, colors });
+      confetti({ particleCount: 40, angle: 120, spread: 55, origin: { x: 1, y: 0.6 }, colors });
+    }, 200);
+    return () => clearTimeout(t1);
+  }, [showCongratsOverlay]);
+
   function handleOpenMysteryBox() {
     setMysteryPhase("video");
     setMysteryValue(MYSTERY_CASH_VALUES[Math.floor(Math.random() * MYSTERY_CASH_VALUES.length)]);
@@ -65,9 +82,14 @@ export default function V2Page() {
         <div
           className="mb-4 relative rounded-2xl"
           style={{
-            background: "linear-gradient(180deg, #111 0%, #0a0a0a 40%, #050505 100%)",
-            boxShadow: "0 0 40px 3px rgba(0,0,0,0.6)",
-            padding: "26px",
+            background: "linear-gradient(180deg, #151515 0%, #0e0e0e 40%, #080808 100%)",
+            borderTop: "1px solid rgba(255,255,255,0.08)",
+            borderLeft: "1px solid rgba(255,255,255,0.05)",
+            borderRight: "1px solid rgba(0,0,0,0.4)",
+            borderBottom: "1px solid rgba(0,0,0,0.5)",
+            boxShadow:
+              "0 6px 0 0 #050505, 0 6px 0 1px rgba(0,0,0,0.6), 0 10px 20px 0 rgba(0,0,0,0.7), 0 0 40px 3px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06), inset 0 -2px 4px rgba(0,0,0,0.4)",
+            padding: "26px 26px 28px 26px",
           }}
         >
           {/* 4 corner bolts */}
@@ -82,8 +104,8 @@ export default function V2Page() {
               className="absolute z-10"
               style={{
                 ...pos,
-                width: 18,
-                height: 18,
+                width: 14,
+                height: 14,
                 borderRadius: "50%",
                 background: "radial-gradient(circle at 38% 32%, #444 0%, #333 30%, #222 60%, #111 100%)",
                 boxShadow:
@@ -95,8 +117,8 @@ export default function V2Page() {
                   position: "absolute",
                   top: "50%",
                   left: "50%",
-                  width: 10,
-                  height: 2,
+                  width: 8,
+                  height: 1.6,
                   transform: "translate(-50%, -50%) rotate(35deg)",
                   backgroundColor: "rgba(0,0,0,0.5)",
                   borderRadius: 1,
@@ -136,7 +158,7 @@ export default function V2Page() {
             className="absolute z-20"
             style={{
               left: -2,
-              top: "50%",
+              top: 136,
               transform: "translateY(-50%)",
             }}
           >
@@ -163,7 +185,7 @@ export default function V2Page() {
             className="absolute z-20"
             style={{
               right: -2,
-              top: "50%",
+              top: 136,
               transform: "translateY(-50%)",
             }}
           >
@@ -334,42 +356,52 @@ export default function V2Page() {
                 </p>
               </div>
             </div>
+
+            {/* Screen reflection overlay */}
+            <div
+              className="absolute inset-0 pointer-events-none z-[5]"
+              style={{
+                borderRadius: "inherit",
+                background: "linear-gradient(165deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 25%, transparent 50%, transparent 80%, rgba(255,255,255,0.02) 100%)",
+              }}
+            />
+          </div>
+
+          {/* CTA Button — embedded in frame bottom */}
+          <div className="relative z-[3]" style={{ marginTop: 10 }}>
+            <button
+              type="button"
+              onClick={() => {
+                if (isMysteryBox && mysteryPhase === "won") {
+                  handleOpenMysteryBox();
+                } else {
+                  handleSpinAgain();
+                }
+              }}
+              disabled={isSpinning || mysteryPhase === "video"}
+              className={cn(
+                "button",
+                isSpinning || mysteryPhase === "video"
+                  ? "button--disabled"
+                  : isMysteryBox && mysteryPhase === "won"
+                  ? "button--purple"
+                  : "button--green"
+              )}
+            >
+              <div className="button-top">
+                {isSpinning
+                  ? "Spinning..."
+                  : mysteryPhase === "video"
+                  ? "Opening..."
+                  : isMysteryBox && mysteryPhase === "won"
+                  ? "Open Mystery Box"
+                  : "Spin Now"}
+              </div>
+              <div className="button-bottom" />
+              <div className="button-base" />
+            </button>
           </div>
         </div>
-
-        {/* CTA Button */}
-        <button
-          onClick={() => {
-            if (isMysteryBox && mysteryPhase === "won") {
-              handleOpenMysteryBox();
-            } else {
-              handleSpinAgain();
-            }
-          }}
-          disabled={isSpinning || mysteryPhase === "video"}
-          className={cn(
-            "w-full py-3 font-bold text-white",
-            isSpinning || mysteryPhase === "video"
-              ? "bg-zinc-600 cursor-not-allowed"
-              : "hover:opacity-90 active:opacity-80"
-          )}
-          style={{
-            borderRadius: "9999px",
-            backgroundColor: isSpinning || mysteryPhase === "video"
-              ? undefined
-              : isMysteryBox && mysteryPhase === "won"
-              ? "#7C3AED"
-              : "#00AB4C",
-          }}
-        >
-          {isSpinning
-            ? "Spinning..."
-            : mysteryPhase === "video"
-            ? "Opening..."
-            : isMysteryBox && mysteryPhase === "won"
-            ? "Open Mystery Box"
-            : "Spin Now"}
-        </button>
       </div>
     </div>
   );

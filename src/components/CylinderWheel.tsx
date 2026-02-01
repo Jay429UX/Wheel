@@ -116,7 +116,7 @@ export function CylinderWheel({ rewards, spinning, onSpinComplete }: CylinderWhe
         style={{
           position: "absolute",
           inset: 0,
-          clipPath: "ellipse(49% 110% at 50% 50%)",
+          clipPath: "ellipse(49% 90% at 50% 50%)",
         }}
       >
         {/* Perspective wrapper */}
