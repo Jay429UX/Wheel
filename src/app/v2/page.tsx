@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { CylinderWheel, type Reward } from "@/components/CylinderWheel";
-import { Starburst } from "@/components/Starburst";
+import { FloatingParticles } from "@/components/FloatingParticles";
 
 const yourSpinRewards: Reward[] = [
   { id: 1, name: "$0.50", image: "/rewards/cash.png", chance: 20 },
@@ -32,7 +32,7 @@ export default function V2Page() {
   const isMysteryBox = spinResult?.name === "Mystery Box";
   const showCongrats = spinResult && !isSpinning;
   const showCongratsOverlay = showCongrats && (!isMysteryBox || mysteryPhase === "reveal");
-  const showWheel = !showCongrats || (isMysteryBox && mysteryPhase === "won");
+  const showWheel = !showCongrats;
 
   function handleOpenMysteryBox() {
     setMysteryPhase("video");
@@ -62,10 +62,11 @@ export default function V2Page() {
       <div className="w-full max-w-md mx-4">
         {/* Game Container — frame with bolts, wheel inside */}
         <div
-          className="mb-4 relative rounded-lg"
+          className="mb-4 relative rounded-2xl"
           style={{
-            background: "linear-gradient(180deg, #333 0%, #1a1a1a 30%, #0a0a0a 70%, #000 100%)",
-            boxShadow: "0 0 20px 3px rgba(0,0,0,0.6)",
+            background: "linear-gradient(180deg, #111 0%, #0a0a0a 40%, #050505 100%)",
+            border: "1.5px solid #22c55e",
+            boxShadow: "0 0 8px rgba(34,197,94,0.4), 0 0 20px rgba(34,197,94,0.2), inset 0 0 8px rgba(34,197,94,0.1), 0 0 40px 3px rgba(0,0,0,0.6)",
             padding: "26px",
           }}
         >
@@ -231,22 +232,13 @@ export default function V2Page() {
               onEnded={handleVideoEnded}
             />
 
-            {/* Starburst behind congrats */}
-            {showCongratsOverlay && !isMysteryBox && (
-              <div
-                className="absolute inset-0 z-[3] transition-opacity duration-700"
-                style={{ opacity: showCongratsOverlay ? 1 : 0 }}
-              >
-                <Starburst centered variant="gold" />
-              </div>
-            )}
-            {showCongratsOverlay && mysteryPhase === "reveal" && (
-              <div
-                className="absolute inset-0 z-[3] transition-opacity duration-700"
-                style={{ opacity: 1 }}
-              >
-                <Starburst centered variant="gold" />
-              </div>
+            {/* Floating particles — only on win overlays */}
+            {showCongrats && (
+              <FloatingParticles mode={
+                mysteryPhase === "reveal" ? "gold" :
+                isMysteryBox ? "purple" :
+                "gold"
+              } />
             )}
 
             {/* Congratulations overlay (cash win or mystery reveal) */}
@@ -257,7 +249,7 @@ export default function V2Page() {
                 transform: showCongratsOverlay ? "translateY(0)" : "translateY(40px)",
               }}
             >
-              <div className={`relative bg-black/60 backdrop-blur-sm rounded-xl px-6 py-3 flex flex-col items-center overflow-hidden ${isMysteryBox && mysteryPhase !== "reveal" ? "animate-mystery-shake" : ""}`}>
+              <div className={`relative bg-black rounded-xl px-6 py-3 flex flex-col items-center overflow-hidden ${isMysteryBox && mysteryPhase !== "reveal" ? "animate-mystery-shake" : ""}`}>
                 <div
                   className="absolute inset-0 rounded-xl"
                   style={{
@@ -308,7 +300,7 @@ export default function V2Page() {
                 transform: isMysteryBox && mysteryPhase === "won" ? "translateY(0)" : "translateY(40px)",
               }}
             >
-              <div className="relative bg-black/60 backdrop-blur-sm rounded-xl px-6 py-3 flex flex-col items-center overflow-hidden animate-mystery-shake">
+              <div className="relative bg-black rounded-xl px-6 py-3 flex flex-col items-center overflow-hidden animate-mystery-shake">
                 <div
                   className="absolute inset-0 rounded-xl"
                   style={{

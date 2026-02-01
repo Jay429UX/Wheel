@@ -26,7 +26,7 @@ function weightedRandom(rewards: Reward[]): Reward {
 }
 
 /* ─── Segment colors ─── */
-const COLORS = ["#14532d", "#0a0a0a"];
+const COLORS = ["green-gradient", "#0a0a0a"];
 
 export function CylinderWheel({ rewards, spinning, onSpinComplete }: CylinderWheelProps) {
   const [rotation, setRotation] = useState(0);
@@ -157,7 +157,9 @@ export function CylinderWheel({ rewards, spinning, onSpinComplete }: CylinderWhe
                     top: 0,
                     backfaceVisibility: "hidden",
                     transform: `translateY(${-FACE_H / 2}px) rotateX(${-angle}deg) translateZ(${R - 1}px)`,
-                    backgroundColor: color,
+                    ...(color === "green-gradient"
+                      ? { background: "linear-gradient(180deg, #14532d 0%, #22c55e 100%)" }
+                      : { backgroundColor: color }),
                     borderTop: "1px solid rgba(255,255,255,0.1)",
                     borderBottom: "1px solid rgba(0,0,0,0.2)",
                   }}
