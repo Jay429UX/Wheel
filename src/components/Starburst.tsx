@@ -5,7 +5,7 @@ import { useRef, useEffect, useCallback } from "react";
 const RAY_COUNT = 24;
 const ROTATION_SPEED = 0.003; // radians per frame
 
-export function Starburst() {
+export function Starburst({ centered = false, variant = "green" }: { centered?: boolean; variant?: "green" | "gold" } = {}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef(0);
   const angleRef = useRef(0);
@@ -26,7 +26,7 @@ export function Starburst() {
     ctx.clearRect(0, 0, w, h);
 
     const cx = w / 2;
-    const cy = h; // center at bottom (since wheel is top-half view)
+    const cy = centered ? h / 2 : h;
     const maxRadius = Math.max(w, h) * 1.2;
 
     angleRef.current += ROTATION_SPEED;
@@ -43,16 +43,20 @@ export function Starburst() {
       ctx.closePath();
 
       // Alternate between two subtle colors
-      if (i % 2 === 0) {
-        ctx.fillStyle = "rgba(22, 163, 74, 0.06)"; // green
+      if (variant === "gold") {
+        ctx.fillStyle = i % 2 === 0
+          ? "rgba(212, 175, 55, 0.04)"
+          : "rgba(255, 243, 182, 0.02)";
       } else {
-        ctx.fillStyle = "rgba(34, 197, 94, 0.04)"; // lighter green
+        ctx.fillStyle = i % 2 === 0
+          ? "rgba(22, 163, 74, 0.06)"
+          : "rgba(34, 197, 94, 0.04)";
       }
       ctx.fill();
     }
 
     rafRef.current = requestAnimationFrame(animate);
-  }, []);
+  }, [centered, variant]);
 
   useEffect(() => {
     rafRef.current = requestAnimationFrame(animate);
