@@ -127,8 +127,6 @@ export default function V2Page() {
             </div>
           ))}
 
-          {/* Scratch & bump texture on frame */}
-          <div className="frame-texture" />
 
           {/* Dicey logo — centered on top frame edge */}
           <div
@@ -153,57 +151,173 @@ export default function V2Page() {
           {/* Frame shimmer effect */}
           <div className="frame-shimmer-wrap" />
 
-          {/* Gold arrow — left, pointing right */}
+          {/* Green electric arrow — left, pointing right */}
           <div
-            className="absolute z-20"
+            className="absolute z-20 arrow-electric"
             style={{
               left: -2,
               top: 136,
               transform: "translateY(-50%)",
             }}
           >
-            <svg width="20" height="32" viewBox="0 0 20 32" fill="none">
+            <svg width="20" height="32" viewBox="0 0 20 32" fill="none" className="arrow-pulse">
               <defs>
-                <linearGradient id="goldGradL" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
-                  <stop offset="0%" stopColor="#BC9D44">
-                    <animate attributeName="stop-color" values="#BC9D44;#FFF3B6;#D4C476;#A47713;#FFF3B6;#BC9D44" dur="3s" repeatCount="indefinite" />
+                <linearGradient id="greenGradL" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+                  <stop offset="0%" stopColor="#00ff88">
+                    <animate attributeName="stop-color" values="#00ff88;#00ffcc;#39ff14;#00ff88" dur="1.5s" repeatCount="indefinite" />
                   </stop>
-                  <stop offset="50%" stopColor="#FFF3B6">
-                    <animate attributeName="stop-color" values="#FFF3B6;#D4C476;#A47713;#FFF3B6;#BC9D44;#FFF3B6" dur="3s" repeatCount="indefinite" />
+                  <stop offset="50%" stopColor="#39ff14">
+                    <animate attributeName="stop-color" values="#39ff14;#00ff88;#00ffcc;#39ff14" dur="1.5s" repeatCount="indefinite" />
                   </stop>
-                  <stop offset="100%" stopColor="#A47713">
-                    <animate attributeName="stop-color" values="#A47713;#FFF3B6;#BC9D44;#FFF3B6;#D4C476;#A47713" dur="3s" repeatCount="indefinite" />
+                  <stop offset="100%" stopColor="#00cc44">
+                    <animate attributeName="stop-color" values="#00cc44;#39ff14;#00ff88;#00cc44" dur="1.5s" repeatCount="indefinite" />
                   </stop>
                 </linearGradient>
+                <filter id="elecGlowL" x="-30%" y="-30%" width="160%" height="160%">
+                  <feTurbulence type="turbulence" baseFrequency="0.04" numOctaves="3" seed="1" result="turb">
+                    <animate attributeName="seed" values="1;5;2;8;3;6;1" dur="0.5s" repeatCount="indefinite" />
+                  </feTurbulence>
+                  <feDisplacementMap in="SourceGraphic" in2="turb" scale="3" result="displaced" />
+                  <feGaussianBlur in="displaced" stdDeviation="2" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="displaced" />
+                  </feMerge>
+                </filter>
+                <filter id="sparkTurbL" x="-50%" y="-50%" width="200%" height="200%">
+                  <feTurbulence type="turbulence" baseFrequency="0.08" numOctaves="4" seed="10" result="turb">
+                    <animate attributeName="seed" values="10;20;15;30;10" dur="0.3s" repeatCount="indefinite" />
+                  </feTurbulence>
+                  <feDisplacementMap in="SourceGraphic" in2="turb" scale="4" result="displaced" />
+                  <feGaussianBlur in="displaced" stdDeviation="0.5" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="displaced" />
+                  </feMerge>
+                </filter>
               </defs>
-              <path d="M0,0 L20,16 L0,32 Z" fill="url(#goldGradL)" stroke="#8B6914" strokeWidth="1" />
+              <path d="M0,0 L20,16 L0,32 Z" fill="url(#greenGradL)" stroke="#00ff88" strokeWidth="0.5" filter="url(#elecGlowL)" />
+            </svg>
+            {/* Electricity bolts */}
+            <svg className="arrow-sparks" width="40" height="52" viewBox="-10 -10 40 52" style={{ position: "absolute", top: -10, left: -10, pointerEvents: "none" }} filter="url(#sparkTurbL)">
+              {/* Bolt radiating up-right ↗ */}
+              <path d="M12,14 L16,8 L14,4 L19,-1" stroke="#00ff88" strokeWidth="1.1" fill="none" opacity="0.8" strokeLinecap="round">
+                <animate attributeName="opacity" values="0;1;0.2;0.9;0" dur="0.38s" repeatCount="indefinite" />
+                <animate attributeName="d" values="M12,14 L16,8 L14,4 L19,-1;M13,13 L17,7 L15,3 L20,-2;M11,15 L15,9 L13,5 L18,0" dur="0.28s" repeatCount="indefinite" />
+              </path>
+              {/* Bolt going left-down ↙ */}
+              <path d="M6,18 L1,22 L3,26" stroke="#39ff14" strokeWidth="0.6" fill="none" opacity="0.5" strokeLinecap="round">
+                <animate attributeName="opacity" values="0.5;0;0.8;0;0" dur="0.22s" repeatCount="indefinite" />
+              </path>
+              {/* Bolt arcing down-right then back up ↘↗ */}
+              <path d="M14,22 L19,28 L16,33 L22,30 L18,38" stroke="#00ffcc" strokeWidth="0.9" fill="none" opacity="0.6" strokeLinecap="round">
+                <animate attributeName="opacity" values="0;0.7;0;0.4;0.8;0" dur="0.52s" repeatCount="indefinite" />
+                <animate attributeName="d" values="M14,22 L19,28 L16,33 L22,30 L18,38;M15,24 L20,29 L17,35 L23,32 L19,40;M13,21 L18,27 L15,32 L21,29 L17,37" dur="0.4s" repeatCount="indefinite" />
+              </path>
+              {/* Horizontal flick ← */}
+              <path d="M4,8 L-4,7" stroke="#00ff88" strokeWidth="1.3" fill="none" opacity="0.3" strokeLinecap="round">
+                <animate attributeName="opacity" values="0;0.9;0;0;0.4;0" dur="0.6s" repeatCount="indefinite" />
+              </path>
+              {/* Bolt going up-left ↖ */}
+              <path d="M8,20 L3,16 L5,12 L-1,9" stroke="#39ff14" strokeWidth="0.7" fill="none" opacity="0.7" strokeLinecap="round">
+                <animate attributeName="opacity" values="0.7;0;0.3;1;0" dur="0.33s" repeatCount="indefinite" />
+                <animate attributeName="d" values="M8,20 L3,16 L5,12 L-1,9;M9,21 L4,17 L6,13 L0,10;M7,19 L2,15 L4,11 L-2,8" dur="0.2s" repeatCount="indefinite" />
+              </path>
+              {/* Vertical spark ↓ */}
+              <path d="M20,18 L21,24 L19,28" stroke="#00ffcc" strokeWidth="0.8" fill="none" opacity="0.4" strokeLinecap="round">
+                <animate attributeName="opacity" values="0;0.6;0;1;0" dur="0.27s" repeatCount="indefinite" />
+              </path>
+              {/* Micro dot spark */}
+              <circle cx="8" cy="0" r="0.8" fill="#00ffcc" opacity="0.5">
+                <animate attributeName="opacity" values="0;1;0" dur="0.15s" repeatCount="indefinite" />
+                <animate attributeName="cy" values="0;2;-1" dur="0.25s" repeatCount="indefinite" />
+              </circle>
             </svg>
           </div>
 
-          {/* Gold arrow — right, pointing left */}
+          {/* Green electric arrow — right, pointing left */}
           <div
-            className="absolute z-20"
+            className="absolute z-20 arrow-electric"
             style={{
               right: -2,
               top: 136,
               transform: "translateY(-50%)",
             }}
           >
-            <svg width="20" height="32" viewBox="0 0 20 32" fill="none">
+            <svg width="20" height="32" viewBox="0 0 20 32" fill="none" className="arrow-pulse">
               <defs>
-                <linearGradient id="goldGradR" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
-                  <stop offset="0%" stopColor="#BC9D44">
-                    <animate attributeName="stop-color" values="#BC9D44;#FFF3B6;#D4C476;#A47713;#FFF3B6;#BC9D44" dur="3s" repeatCount="indefinite" />
+                <linearGradient id="greenGradR" x1="1" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+                  <stop offset="0%" stopColor="#00ff88">
+                    <animate attributeName="stop-color" values="#00ff88;#00ffcc;#39ff14;#00ff88" dur="1.5s" repeatCount="indefinite" />
                   </stop>
-                  <stop offset="50%" stopColor="#FFF3B6">
-                    <animate attributeName="stop-color" values="#FFF3B6;#D4C476;#A47713;#FFF3B6;#BC9D44;#FFF3B6" dur="3s" repeatCount="indefinite" />
+                  <stop offset="50%" stopColor="#39ff14">
+                    <animate attributeName="stop-color" values="#39ff14;#00ff88;#00ffcc;#39ff14" dur="1.5s" repeatCount="indefinite" />
                   </stop>
-                  <stop offset="100%" stopColor="#A47713">
-                    <animate attributeName="stop-color" values="#A47713;#FFF3B6;#BC9D44;#FFF3B6;#D4C476;#A47713" dur="3s" repeatCount="indefinite" />
+                  <stop offset="100%" stopColor="#00cc44">
+                    <animate attributeName="stop-color" values="#00cc44;#39ff14;#00ff88;#00cc44" dur="1.5s" repeatCount="indefinite" />
                   </stop>
                 </linearGradient>
+                <filter id="elecGlowR" x="-30%" y="-30%" width="160%" height="160%">
+                  <feTurbulence type="turbulence" baseFrequency="0.04" numOctaves="3" seed="7" result="turb">
+                    <animate attributeName="seed" values="7;3;9;2;6;4;7" dur="0.5s" repeatCount="indefinite" />
+                  </feTurbulence>
+                  <feDisplacementMap in="SourceGraphic" in2="turb" scale="3" result="displaced" />
+                  <feGaussianBlur in="displaced" stdDeviation="2" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="displaced" />
+                  </feMerge>
+                </filter>
+                <filter id="sparkTurbR" x="-50%" y="-50%" width="200%" height="200%">
+                  <feTurbulence type="turbulence" baseFrequency="0.08" numOctaves="4" seed="25" result="turb">
+                    <animate attributeName="seed" values="25;35;20;40;25" dur="0.3s" repeatCount="indefinite" />
+                  </feTurbulence>
+                  <feDisplacementMap in="SourceGraphic" in2="turb" scale="4" result="displaced" />
+                  <feGaussianBlur in="displaced" stdDeviation="0.5" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="displaced" />
+                  </feMerge>
+                </filter>
               </defs>
-              <path d="M20,0 L0,16 L20,32 Z" fill="url(#goldGradR)" stroke="#8B6914" strokeWidth="1" />
+              <path d="M20,0 L0,16 L20,32 Z" fill="url(#greenGradR)" stroke="#00ff88" strokeWidth="0.5" filter="url(#elecGlowR)" />
+            </svg>
+            {/* Electricity bolts */}
+            <svg className="arrow-sparks" width="40" height="52" viewBox="-10 -10 40 52" style={{ position: "absolute", top: -10, right: -10, pointerEvents: "none" }} filter="url(#sparkTurbR)">
+              {/* Bolt radiating up-left ↖ */}
+              <path d="M8,14 L4,8 L6,4 L1,-1" stroke="#00ff88" strokeWidth="1.1" fill="none" opacity="0.8" strokeLinecap="round">
+                <animate attributeName="opacity" values="0;0.9;0.1;1;0" dur="0.42s" repeatCount="indefinite" />
+                <animate attributeName="d" values="M8,14 L4,8 L6,4 L1,-1;M7,13 L3,7 L5,3 L0,-2;M9,15 L5,9 L7,5 L2,0" dur="0.32s" repeatCount="indefinite" />
+              </path>
+              {/* Bolt going right-down ↘ */}
+              <path d="M14,18 L19,22 L17,26" stroke="#39ff14" strokeWidth="0.6" fill="none" opacity="0.5" strokeLinecap="round">
+                <animate attributeName="opacity" values="0;0.7;0;0.9;0" dur="0.19s" repeatCount="indefinite" />
+              </path>
+              {/* Bolt arcing down-left then up ↙↖ */}
+              <path d="M6,22 L1,28 L4,33 L-2,30 L2,38" stroke="#00ffcc" strokeWidth="0.9" fill="none" opacity="0.6" strokeLinecap="round">
+                <animate attributeName="opacity" values="0.3;0;0.8;0;0.5;0" dur="0.48s" repeatCount="indefinite" />
+                <animate attributeName="d" values="M6,22 L1,28 L4,33 L-2,30 L2,38;M5,24 L0,29 L3,35 L-3,32 L1,40;M7,21 L2,27 L5,32 L-1,29 L3,37" dur="0.37s" repeatCount="indefinite" />
+              </path>
+              {/* Horizontal flick → */}
+              <path d="M16,8 L24,7" stroke="#00ff88" strokeWidth="1.3" fill="none" opacity="0.3" strokeLinecap="round">
+                <animate attributeName="opacity" values="0;0.8;0;0;0.6;0" dur="0.55s" repeatCount="indefinite" />
+              </path>
+              {/* Bolt going down-right ↘ */}
+              <path d="M12,20 L17,24 L15,28 L21,31" stroke="#39ff14" strokeWidth="0.7" fill="none" opacity="0.7" strokeLinecap="round">
+                <animate attributeName="opacity" values="0.6;0;0.4;0.9;0" dur="0.29s" repeatCount="indefinite" />
+                <animate attributeName="d" values="M12,20 L17,24 L15,28 L21,31;M11,21 L16,25 L14,29 L20,32;M13,19 L18,23 L16,27 L22,30" dur="0.23s" repeatCount="indefinite" />
+              </path>
+              {/* Vertical spark ↑ */}
+              <path d="M0,20 L-1,14 L1,10" stroke="#00ffcc" strokeWidth="0.8" fill="none" opacity="0.4" strokeLinecap="round">
+                <animate attributeName="opacity" values="0;0.6;0;1;0" dur="0.31s" repeatCount="indefinite" />
+              </path>
+              {/* Micro dot spark */}
+              <circle cx="12" cy="32" r="0.8" fill="#00ffcc" opacity="0.5">
+                <animate attributeName="opacity" values="0;1;0" dur="0.18s" repeatCount="indefinite" />
+                <animate attributeName="cy" values="32;30;33" dur="0.25s" repeatCount="indefinite" />
+              </circle>
             </svg>
           </div>
 
