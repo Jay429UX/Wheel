@@ -7,16 +7,16 @@ import { FloatingParticles } from "@/components/FloatingParticles";
 import { Starburst } from "@/components/Starburst";
 
 const yourSpinRewards = [
-  { id: 1, name: "$0.50", image: "/rewards/cash.png", chance: 20 },
-  { id: 2, name: "$1.00", image: "/rewards/cash.png", chance: 18 },
-  { id: 3, name: "$2.50", image: "/rewards/cash.png", chance: 15 },
-  { id: 4, name: "$5.00", image: "/rewards/cash.png", chance: 12 },
-  { id: 5, name: "$10.00", image: "/rewards/cash.png", chance: 10 },
-  { id: 6, name: "$25.00", image: "/rewards/cash.png", chance: 7 },
-  { id: 7, name: "$50.00", image: "/rewards/cash.png", chance: 4 },
-  { id: 8, name: "$100.00", image: "/rewards/cash.png", chance: 2 },
-  { id: 9, name: "Mystery Box", image: "/rewards/mystery.png", chance: 8 },
-  { id: 10, name: "Mystery Box", image: "/rewards/mystery.png", chance: 4 },
+  { id: 1, name: "$0.50", image: "/Cash-Prize.png", chance: 20 },
+  { id: 2, name: "$1.00", image: "/Cash-Prize.png", chance: 18 },
+  { id: 3, name: "$2.50", image: "/Cash-Prize.png", chance: 15 },
+  { id: 4, name: "$5.00", image: "/Cash-Prize.png", chance: 12 },
+  { id: 5, name: "$10.00", image: "/Cash-Prize.png", chance: 10 },
+  { id: 6, name: "$25.00", image: "/Cash-Prize.png", chance: 7 },
+  { id: 7, name: "$50.00", image: "/Cash-Prize.png", chance: 4 },
+  { id: 8, name: "$100.00", image: "/Cash-Prize.png", chance: 2 },
+  { id: 9, name: "Mystery Box", image: "/Mystery-box.png", chance: 8 },
+  { id: 10, name: "Mystery Box", image: "/Mystery-box.png", chance: 4 },
 ];
 
 // Mystery box random cash values

@@ -144,6 +144,7 @@ export function CylinderWheel({ rewards, spinning, onSpinComplete }: CylinderWhe
           >
             {rewards.map((reward, i) => {
               const angle = segmentAngle * i;
+              const isMystery = reward.name === "Mystery Box";
               const color = COLORS[i % COLORS.length];
               return (
                 <div
@@ -157,11 +158,11 @@ export function CylinderWheel({ rewards, spinning, onSpinComplete }: CylinderWhe
                     top: 0,
                     backfaceVisibility: "hidden",
                     transform: `translateY(${-FACE_H / 2}px) rotateX(${-angle}deg) translateZ(${R - 1}px)`,
-                    ...(color === "green-gradient"
+                    ...(isMystery
+                      ? { background: "linear-gradient(180deg, #3b0764 0%, #7c3aed 50%, #4c1d95 100%)" }
+                      : color === "green-gradient"
                       ? { background: "linear-gradient(180deg, #14532d 0%, #22c55e 100%)" }
                       : { backgroundColor: color }),
-                    borderTop: "1px solid rgba(255,255,255,0.1)",
-                    borderBottom: "1px solid rgba(0,0,0,0.2)",
                   }}
                 >
                   <div className="flex items-center gap-2 px-4">
