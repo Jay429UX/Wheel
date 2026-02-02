@@ -226,11 +226,10 @@ export default function V2Page() {
             <img
               src="/Dicey.svg"
               alt="Dicey"
+              className="dicey-neon-glow"
               style={{
                 height: 16,
                 width: "auto",
-                opacity: 0.6,
-                filter: "drop-shadow(0 1px 1px rgba(255,255,255,0.3)) drop-shadow(0 -1px 1px rgba(0,0,0,0.8))",
               }}
             />
           </div>
