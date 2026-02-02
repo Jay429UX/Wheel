@@ -246,6 +246,23 @@ body {
   transition-duration: .2s;
 }
 
+.button-top::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: 4px;
+  background: linear-gradient(
+    170deg,
+    rgba(255, 255, 255, 0.45) 0%,
+    rgba(255, 255, 255, 0.2) 25%,
+    rgba(255, 255, 255, 0.05) 45%,
+    transparent 55%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
 .button:active:not(:disabled) .button-top::after {
   border-radius: 6px;
   padding: 0 2px;

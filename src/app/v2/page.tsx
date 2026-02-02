@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { CylinderWheel, type Reward } from "@/components/CylinderWheel";
 import { FloatingParticles } from "@/components/FloatingParticles";
@@ -79,16 +79,16 @@ function generateDots(count: number, side: "left" | "right") {
 
 
 const yourSpinRewards: Reward[] = [
-  { id: 1, name: "$0.50", image: "/Cash-Prize.png", chance: 20 },
-  { id: 2, name: "$1.00", image: "/Cash-Prize.png", chance: 18 },
-  { id: 3, name: "$2.50", image: "/Cash-Prize.png", chance: 15 },
-  { id: 9, name: "Mystery Box", image: "/Mystery-box.png", chance: 8 },
-  { id: 4, name: "$5.00", image: "/Cash-Prize.png", chance: 12 },
-  { id: 5, name: "$10.00", image: "/Cash-Prize.png", chance: 10 },
-  { id: 6, name: "$25.00", image: "/Cash-Prize.png", chance: 7 },
-  { id: 7, name: "$50.00", image: "/Cash-Prize.png", chance: 4 },
-  { id: 10, name: "Mystery Box", image: "/Mystery-box.png", chance: 4 },
-  { id: 8, name: "$100.00", image: "/Cash-Prize.png", chance: 2 },
+  { id: 1, name: "$0.50", image: "/Cash-Prize.png", chance: 14 },
+  { id: 2, name: "$1.00", image: "/Cash-Prize.png", chance: 13 },
+  { id: 3, name: "$2.50", image: "/Cash-Prize.png", chance: 11 },
+  { id: 9, name: "Mystery Box", image: "/Mystery-box.png", chance: 15 },
+  { id: 4, name: "$5.00", image: "/Cash-Prize.png", chance: 8 },
+  { id: 5, name: "$10.00", image: "/Cash-Prize.png", chance: 7 },
+  { id: 6, name: "$25.00", image: "/Cash-Prize.png", chance: 5 },
+  { id: 7, name: "$50.00", image: "/Cash-Prize.png", chance: 3 },
+  { id: 10, name: "Mystery Box", image: "/Mystery-box.png", chance: 15 },
+  { id: 8, name: "$100.00", image: "/Cash-Prize.png", chance: 9 },
 ];
 
 const MYSTERY_CASH_VALUES = ["$5.00", "$10.00", "$25.00", "$50.00", "$100.00", "$250.00", "$500.00"];
@@ -102,21 +102,46 @@ export default function V2Page() {
   const [mysteryValue, setMysteryValue] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Generate random bolts once per mount
-  const leftBolts = useMemo(() => generateBolts(6, "left"), []);
-  const rightBolts = useMemo(() => generateBolts(6, "right"), []);
-  const leftDots = useMemo(() => generateDots(2, "left"), []);
-  const rightDots = useMemo(() => generateDots(2, "right"), []);
-  const turbSeeds = useMemo(() => ({
-    lGlow: Array.from({ length: 7 }, () => Math.floor(Math.random() * 50)),
-    rGlow: Array.from({ length: 7 }, () => Math.floor(Math.random() * 50)),
-    lSpark: Array.from({ length: 5 }, () => Math.floor(Math.random() * 50)),
-    rSpark: Array.from({ length: 5 }, () => Math.floor(Math.random() * 50)),
-    lFreq: (0.03 + Math.random() * 0.06).toFixed(3),
-    rFreq: (0.03 + Math.random() * 0.06).toFixed(3),
-    lScale: 2 + Math.floor(Math.random() * 4),
-    rScale: 2 + Math.floor(Math.random() * 4),
-  }), []);
+  // Generate random bolts client-side only to avoid hydration mismatch
+  const [boltData, setBoltData] = useState<{
+    leftBolts: ReturnType<typeof generateBolts>;
+    rightBolts: ReturnType<typeof generateBolts>;
+    leftDots: ReturnType<typeof generateDots>;
+    rightDots: ReturnType<typeof generateDots>;
+    turbSeeds: {
+      lGlow: number[]; rGlow: number[]; lSpark: number[]; rSpark: number[];
+      lFreq: string; rFreq: string; lScale: number; rScale: number;
+    };
+  } | null>(null);
+
+  useEffect(() => {
+    setBoltData({
+      leftBolts: generateBolts(6, "left"),
+      rightBolts: generateBolts(6, "right"),
+      leftDots: generateDots(2, "left"),
+      rightDots: generateDots(2, "right"),
+      turbSeeds: {
+        lGlow: Array.from({ length: 7 }, () => Math.floor(Math.random() * 50)),
+        rGlow: Array.from({ length: 7 }, () => Math.floor(Math.random() * 50)),
+        lSpark: Array.from({ length: 5 }, () => Math.floor(Math.random() * 50)),
+        rSpark: Array.from({ length: 5 }, () => Math.floor(Math.random() * 50)),
+        lFreq: (0.03 + Math.random() * 0.06).toFixed(3),
+        rFreq: (0.03 + Math.random() * 0.06).toFixed(3),
+        lScale: 2 + Math.floor(Math.random() * 4),
+        rScale: 2 + Math.floor(Math.random() * 4),
+      },
+    });
+  }, []);
+
+  const leftBolts = boltData?.leftBolts ?? [];
+  const rightBolts = boltData?.rightBolts ?? [];
+  const leftDots = boltData?.leftDots ?? [];
+  const rightDots = boltData?.rightDots ?? [];
+  const turbSeeds = boltData?.turbSeeds ?? {
+    lGlow: [1,2,3,4,5,6,7], rGlow: [1,2,3,4,5,6,7],
+    lSpark: [10,20,30,40,50], rSpark: [10,20,30,40,50],
+    lFreq: "0.04", rFreq: "0.04", lScale: 3, rScale: 3,
+  };
 
   const isMysteryBox = spinResult?.name === "Mystery Box";
   const showCongrats = spinResult && !isSpinning;

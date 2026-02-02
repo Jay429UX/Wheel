@@ -61,12 +61,19 @@ export function CylinderWheel({ rewards, spinning, onSpinComplete }: CylinderWhe
     hasSpunRef.current = true;
     setIsAnimating(true);
 
+    // Pick winner using weighted random
     const winner = weightedRandom(rewards);
     const winnerIndex = rewards.indexOf(winner);
     const fullSpins = 5 + Math.floor(Math.random() * 3);
-    const totalRotation = fullSpins * 360 + winnerIndex * segmentAngle;
+    // Each segment face is at angle: segmentAngle * i
+    // The drum uses rotateX(-rotation), so segment i is centered when rotation = segmentAngle * i + n*360
+    // We need endRotation % 360 === winnerIndex * segmentAngle
+    const targetAngle = winnerIndex * segmentAngle;
     const startRotation = rotation;
-    const endRotation = startRotation + totalRotation;
+    const currentMod = ((startRotation % 360) + 360) % 360;
+    const delta = ((targetAngle - currentMod) % 360 + 360) % 360;
+    // If delta is 0, we still want to do full spins, not stop immediately
+    const endRotation = startRotation + fullSpins * 360 + (delta === 0 ? 360 : delta);
     const duration = 5500;
     const startTime = performance.now();
 
